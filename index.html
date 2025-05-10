@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+
+    <style>
+      html {
+        font-size: calc(4vw + 2vh);
+      }
+      body {
+        color: white;
+        background: #212121;
+        font-family: 'Arial';
+      }
+      .text {
+        display: flex;
+        font-weight: bold;
+        font-size: 1rem;
+        flex-wrap: wrap;
+        gap: 0.1em 0.5em;
+        line-height: 110%;
+      }
+      .mask {
+        display: inline-block;
+        flex-grow: 1;
+        min-width: 1.5em;
+        background: #fff;
+        mix-blend-mode: hard-light;
+        background-clip: border-box;
+        opacity: 0.12;
+      }
+      .video {
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+      }
+      .video video {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .video svg {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="video">
+      <video src="video.mp4" autoplay muted loop playsinline id="video"></video>
+      <svg
+        class="svg-mask-layer"
+        viewBox="0 0 1920 1080"
+        preserveAspectRatio="none">
+        <defs>
+          <mask id="trafaret">
+            <!-- Full black rectangle -->
+            <rect width="100%" height="100%" fill="white" />
+            <!-- Transparent holes (white in mask) -->
+            <rect
+              x="900"
+              y="600"
+              width="300"
+              height="150"
+              fill="black"
+              class="hole" />
+            <rect
+              x="900"
+              y="600"
+              width="300"
+              height="150"
+              fill="black"
+              class="hole" />
+            <rect
+              x="900"
+              y="600"
+              width="300"
+              height="150"
+              fill="black"
+              class="hole" />
+            <rect
+              x="900"
+              y="600"
+              width="300"
+              height="150"
+              fill="black"
+              class="hole" />
+          </mask>
+        </defs>
+        <!-- Apply the mask to a black layer -->
+        <rect width="100%" height="100%" fill="black" mask="url(#trafaret)" />
+      </svg>
+    </div>
+    <div class="text">
+      <span>We're</span>
+      <span>here</span>
+      <span class="mask"></span>
+      <span>to</span>
+      <span>make</span>
+      <span>healthy</span>
+      <span class="mask"></span>
+      <span>living</span>
+      <span>effortless,</span>
+      <span>so</span>
+      <span>you</span>
+      <span>can</span>
+      <span class="mask"></span>
+      <span>live</span>
+      <span>longer</span>
+      <span>here</span>
+      <span>and</span>
+      <span>happier</span>
+      <span class="mask"></span>
+    </div>
+
+    <script>
+      function updateSvgMaskRects() {
+        const masks = document.querySelectorAll('.mask');
+        // const maskEl = document.querySelector('#video-mask');
+
+        // Clear old rects (except the background)
+        const holes = document.querySelectorAll('rect.hole');
+
+        masks.forEach((el, index) => {
+          const rect = el.getBoundingClientRect();
+          const svgRect = holes[index];
+          console.log(svgRect);
+
+          svgRect.style.x = `${(rect.left / window.innerWidth) * 100}%`;
+          svgRect.style.y = `${(rect.top / window.innerHeight) * 100}%`;
+          svgRect.style.width = `${(rect.width / window.innerWidth) * 100}%`;
+          svgRect.style.height = `${(rect.height / window.innerHeight) * 100}%`;
+        });
+      }
+      // Call on load and resize
+      window.addEventListener('resize', updateSvgMaskRects);
+      window.addEventListener('DOMContentLoaded', updateSvgMaskRects);
+    </script>
+  </body>
+</html>
